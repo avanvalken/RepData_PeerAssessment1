@@ -1,8 +1,10 @@
 ---
-title: "project1"
+title: "Reproducible Research: Peer Assessment 1"
 author: "avanvalken"
 date: "1/9/2021"
-output: html_document
+output: 
+  html_document:
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +16,7 @@ library(plotly)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# 1. Load Data/process data
+## Loading and preprocessing the data
 ```{r}
 # read the activity dataset
 df <- read.csv("activity.csv")
@@ -25,7 +27,7 @@ df$date <- ymd(df$date)
 ```
 
 
-# 2. Histogram of the total number of steps taken each day
+## 2. What is mean total number of steps taken per day?
 ```{r}
 df_date <- df %>% 
   group_by(date) %>% 
@@ -41,12 +43,11 @@ g
 
 ```
 
-# 3. Mean and median number of steps taken each day
-
 The mean number of steps per day is `r mean(df_date$steps)` and the median number of steps per day is `r median(df_date$steps)`.
 
 
-# 4. Time series plot of the average number of steps taken
+## What is the average daily activity pattern?
+
 ```{r}
 ts <- df %>% 
   group_by(interval) %>% 
@@ -62,7 +63,7 @@ g
 ```
 
 
-# 5. The 5-minute interval that, on average, contains the maximum number of steps
+
 ```{r}
 max_steps <- max(ts$steps)
 max_steps_int <- ts$interval[which(ts$steps==max_steps)]
@@ -71,7 +72,8 @@ max_steps_int
 ```
 The interval which on average contains the max number of steps is ```{r} max_steps_int```.
 
-# 6. Code to describe and show a strategy for imputing missing data
+## Imputing missing values
+
 
 ```{r}
 # read complete csv file without removing "na's"
@@ -105,7 +107,6 @@ sum(is.na(df_with_missing))
 
 ```
 
-# 7. Histogram of the total number of steps taken each day after missing values are imputed
 
 Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 ```{r}
@@ -130,7 +131,8 @@ The difference of the mean is (imputed-nonimputed): `r mean(new_df_date$steps)-m
 The imputation of the data did not change the results much. 
 
 
-# 8. Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
+
+## Are there differences in activity patterns between weekdays and weekends?
 ```{r}
 # change name to make df_with_missing shorter
 df <- df_with_missing
