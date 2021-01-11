@@ -1,25 +1,181 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
+author: "avanvalken"
+date: "1/9/2021"
 output: 
   html_document:
     keep_md: true
 ---
 
+```{r setup, include=FALSE}
+# libraries used
+library(tidyverse)
+library(lubridate)
+library(plotly)
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ## Loading and preprocessing the data
+```{r}
+# read the activity dataset
+df <- read.csv("activity.csv")
+df <- na.omit(df)
+df$date <- ymd(df$date)
 
 
+```
 
-## What is mean total number of steps taken per day?
 
+## 2. What is mean total number of steps taken per day?
+```{r}
+df_date <- df %>% 
+  group_by(date) %>% 
+  summarise(steps=sum(steps))
+
+#number of days
+days <- n_distinct(df_date$date)
+
+g <- ggplot(df_date, aes(steps)) +
+  geom_histogram(bins=days, fill="blue") +
+  ggtitle("Histogram of Steps by Day")
+g
+
+```
+
+The mean number of steps per day is `r mean(df_date$steps)` and the median number of steps per day is `r median(df_date$steps)`.
 
 
 ## What is the average daily activity pattern?
 
+```{r}
+ts <- df %>% 
+  group_by(interval) %>% 
+  summarise(steps=mean(steps))
 
+g <- ggplot(ts, aes(interval, steps)) +
+  geom_line(color="#69b3a2") +
+  ggtitle("Average steps per interval") +
+  ylab("Steps") +
+  xlab("Interval")
+g
+
+```
+
+
+
+```{r}
+max_steps <- max(ts$steps)
+max_steps_int <- ts$interval[which(ts$steps==max_steps)]
+
+max_steps_int
+```
+The interval which on average contains the max number of steps is ```{r} max_steps_int```.
 
 ## Imputing missing values
 
 
+```{r}
+# read complete csv file without removing "na's"
+df_with_missing <- read_csv("activity.csv")
+
+df_with_missing$date <- ymd(df_with_missing$date)
+
+# code to describe missing data
+sum(is.na(df_with_missing))
+### 2304
+sum(is.na(df_with_missing$steps))
+### 2304 
+
+### All missing values are in steps
+
+# impute the data by substituting the mean of the steps per interval
+for(i in 1:nrow(df_with_missing)){
+  if (is.na(df_with_missing$steps[i])){
+    x <- which(df_with_missing$interval[i] == ts$interval)
+    
+    #put mean of steps into df_with_missing
+    df_with_missing$steps[i] <- ts[x,]$steps
+  }
+}
+
+# check if it worked
+sum(is.na(df_with_missing))
+###0
+
+
+
+```
+
+
+Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+```{r}
+new_df_date <- df_with_missing %>% 
+  group_by(date) %>% 
+  summarise(steps=sum(steps))
+
+#number of days
+days <- n_distinct(df_date$date)
+
+g <- ggplot(new_df_date, aes(steps)) +
+  geom_histogram(bins=days, fill="blue") +
+  ggtitle("Histogram of Steps by Day with Imputed NAs")
+g
+
+```
+
+The new mean number of steps per day is `r mean(new_df_date$steps)` and the new median number of steps per day is `r median(new_df_date$steps)`.
+
+The difference of the mean is (imputed-nonimputed): `r mean(new_df_date$steps)-mean(df_date$steps)`, and the difference of the median is (imputed-nonimputed): `r median(new_df_date$steps)-median(df_date$steps)`. 
+
+The imputation of the data did not change the results much. 
+
+
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r}
+# change name to make df_with_missing shorter
+df <- df_with_missing
+
+# add day variable
+df$day <- weekdays(df$date)
+df$day <- as.factor(ifelse(df$day==c("Saturday", "Sunday"), "weekend", "weekday"))
+
+#average steps for interval across each weekend or weekday
+
+df <- df %>% 
+  group_by(interval, day) %>% 
+  summarise(steps=mean(steps))
+
+# make a panel plot
+g <- ggplot(df, aes(interval, steps))+
+  geom_line()+
+  facet_grid(~day)+
+  ggtitle("Average Steps per Interval by Weekday or Weekend")
+g
+
+```
+
+
+# 9. All of the R code needed to reproduce the results (numbers, plots, etc.) in the report
+
+All code is already here. 
+
+In addition, here are the versions of the libraries used. 
+```{r}
+sessionInfo()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
