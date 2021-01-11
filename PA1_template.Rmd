@@ -29,7 +29,7 @@ df$date <- ymd(df$date)
 
 
 ## 2. What is mean total number of steps taken per day?
-```{r}
+```{r steps-per-day}
 df_date <- df %>% 
   group_by(date) %>% 
   summarise(steps=sum(steps))
@@ -49,7 +49,7 @@ The mean number of steps per day is `r mean(df_date$steps)` and the median numbe
 
 ## What is the average daily activity pattern?
 
-```{r}
+```{r steps-per-interval}
 ts <- df %>% 
   group_by(interval) %>% 
   summarise(steps=mean(steps))
@@ -76,7 +76,7 @@ The interval which on average contains the max number of steps is ```{r} max_ste
 ## Imputing missing values
 
 
-```{r}
+```{r imputation}
 # read complete csv file without removing "na's"
 df_with_missing <- read_csv("activity.csv")
 
@@ -109,8 +109,8 @@ sum(is.na(df_with_missing))
 ```
 
 
-Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
-```{r}
+Make a histogram of the total number of steps taken each day and calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+```{r imputation-steps-hist}
 new_df_date <- df_with_missing %>% 
   group_by(date) %>% 
   summarise(steps=sum(steps))
@@ -134,7 +134,7 @@ The imputation of the data did not change the results much.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+```{r weekend-vs-week}
 # change name to make df_with_missing shorter
 df <- df_with_missing
 
