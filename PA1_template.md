@@ -210,7 +210,7 @@ df <- df %>%
 g <- ggplot(df, aes(interval, steps))+
   geom_line()+
   facet_grid(~day)+
-  ggtitle("Average Steps per Interval by Weekday or Weekend")
+  ggtitle("Average Steps per interval by weekday vs weekend")
 g
 ```
 
