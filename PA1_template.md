@@ -41,7 +41,7 @@ g <- ggplot(df_date, aes(steps)) +
 g
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](PA1_template_files/figure-html/steps-per-day-1.png)<!-- -->
 
 The mean number of steps per day is 1.0766189\times 10^{4} and the median number of steps per day is 10765.
 
@@ -68,7 +68,7 @@ g <- ggplot(ts, aes(interval, steps)) +
 g
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](PA1_template_files/figure-html/steps-per-interval-1.png)<!-- -->
 
 
 
@@ -174,7 +174,7 @@ g <- ggplot(new_df_date, aes(steps)) +
 g
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](PA1_template_files/figure-html/imputation-steps-hist-1.png)<!-- -->
 
 The new mean number of steps per day is 1.0766189\times 10^{4} and the new median number of steps per day is 1.0766189\times 10^{4}.
 
@@ -214,7 +214,7 @@ g <- ggplot(df, aes(interval, steps))+
 g
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](PA1_template_files/figure-html/weekend-vs-week-1.png)<!-- -->
 
 
 # 9. All of the R code needed to reproduce the results (numbers, plots, etc.) in the report
